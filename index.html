@@ -80,11 +80,17 @@
     h2 { font-size: 1.12rem; letter-spacing: -.02em; margin: 0; }
     .panel-copy { color: var(--muted); font-size: .9rem; margin: 6px 0 0; }
     .field { margin-top: 21px; }
+    .field-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 18px 16px;
+      margin-top: 18px;
+    }
     .label-row { display: flex; justify-content: space-between; gap: 12px; align-items: baseline; margin-bottom: 8px; }
     label { font-size: .9rem; font-weight: 700; }
     .unit { color: var(--muted); font-size: .78rem; }
     .input-wrap { position: relative; }
-    input {
+    input, select {
       width: 100%;
       min-height: 54px;
       border: 1px solid #d7deea;
@@ -95,8 +101,9 @@
       outline: none;
       transition: border-color .18s, box-shadow .18s;
     }
-    input:hover { border-color: #aebbd0; }
-    input:focus { border-color: var(--blue); box-shadow: 0 0 0 4px rgb(52 93 245 / 13%); }
+    input:hover, select:hover { border-color: #aebbd0; }
+    input:focus, select:focus { border-color: var(--blue); box-shadow: 0 0 0 4px rgb(52 93 245 / 13%); }
+    select { appearance: none; }
     .hint { color: var(--muted); font-size: .79rem; margin: 7px 0 0; }
     .actions { display: flex; gap: 11px; margin-top: 27px; }
     .button {
@@ -216,31 +223,163 @@
     <div class="workspace">
       <form id="forecast-form" class="panel form-panel">
         <div class="panel-heading">
-          <h2>Forecast conditions</h2>
-          <p class="panel-copy">Enter the current conditions for the area you want to assess.</p>
+          <h2>NYC trip dataset</h2>
+          <p class="panel-copy">Fill in the full trip snapshot below. The model uses the current surge and driver availability values to estimate demand.</p>
         </div>
 
-        <div class="field">
-          <div class="label-row">
-            <label for="surge">Surge multiplier</label>
-            <span class="unit">multiplier</span>
+        <div class="field-grid">
+          <div class="field">
+            <div class="label-row"><label for="date">Date</label><span class="unit">date</span></div>
+            <input id="date" name="date" type="date" value="2025-03-16">
           </div>
-          <div class="input-wrap">
+
+          <div class="field">
+            <div class="label-row"><label for="pickup_time">Pickup time</label><span class="unit">time</span></div>
+            <input id="pickup_time" name="pickup_time" type="time" value="08:16">
+          </div>
+
+          <div class="field">
+            <div class="label-row"><label for="pickup_location">Pickup location</label><span class="unit">zone</span></div>
+            <select id="pickup_location" name="pickup_location">
+              <option>Downtown</option>
+              <option>Suburbs</option>
+              <option>Midtown</option>
+              <option>Uptown</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <div class="label-row"><label for="drop_location">Drop location</label><span class="unit">zone</span></div>
+            <select id="drop_location" name="drop_location">
+              <option>Downtown</option>
+              <option>Suburbs</option>
+              <option>Midtown</option>
+              <option>Uptown</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <div class="label-row"><label for="distance">Distance</label><span class="unit">miles</span></div>
+            <input id="distance" name="distance" type="number" step="0.01" value="18.2">
+          </div>
+
+          <div class="field">
+            <div class="label-row"><label for="duration">Duration</label><span class="unit">minutes</span></div>
+            <input id="duration" name="duration" type="number" step="0.1" value="55">
+          </div>
+
+          <div class="field">
+            <div class="label-row"><label for="ride_type">Ride type</label><span class="unit">type</span></div>
+            <select id="ride_type" name="ride_type">
+              <option>Standard</option>
+              <option>Pool</option>
+              <option>XL</option>
+              <option>Comfort</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <div class="label-row"><label for="driver_rating">Driver rating</label><span class="unit">/5</span></div>
+            <input id="driver_rating" name="driver_rating" type="number" step="0.1" value="4.6">
+          </div>
+
+          <div class="field">
+            <div class="label-row"><label for="rider_rating">Rider rating</label><span class="unit">/5</span></div>
+            <input id="rider_rating" name="rider_rating" type="number" step="0.1" value="4.9">
+          </div>
+
+          <div class="field">
+            <div class="label-row"><label for="surge">Surge multiplier</label><span class="unit">multiplier</span></div>
             <input id="surge" name="surge" type="number" inputmode="decimal" step="any" min="1" value="1.2" required aria-describedby="surge-hint">
           </div>
-          <p id="surge-hint" class="hint">1.0 means standard pricing; higher values indicate stronger surge.</p>
+
+          <div class="field">
+            <div class="label-row"><label for="payment_method">Payment method</label><span class="unit">method</span></div>
+            <select id="payment_method" name="payment_method">
+              <option>Credit Card</option>
+              <option>Cash</option>
+              <option>Digital Wallet</option>
+              <option>Bank Transfer</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <div class="label-row"><label for="demand">Demand label</label><span class="unit">target</span></div>
+            <select id="demand" name="demand">
+              <option>Medium</option>
+              <option>Low</option>
+              <option>High</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <div class="label-row"><label for="fare">Fare</label><span class="unit">USD</span></div>
+            <input id="fare" name="fare" type="number" step="0.01" value="41.05">
+          </div>
+
+          <div class="field">
+            <div class="label-row"><label for="driver_id">Driver ID</label><span class="unit">id</span></div>
+            <input id="driver_id" name="driver_id" type="text" value="D7170">
+          </div>
+
+          <div class="field">
+            <div class="label-row"><label for="driver_latitude">Driver latitude</label><span class="unit">lat</span></div>
+            <input id="driver_latitude" name="driver_latitude" type="number" step="0.00001" value="40.75414">
+          </div>
+
+          <div class="field">
+            <div class="label-row"><label for="driver_longitude">Driver longitude</label><span class="unit">lng</span></div>
+            <input id="driver_longitude" name="driver_longitude" type="number" step="0.00001" value="-73.99255">
+          </div>
+
+          <div class="field">
+            <div class="label-row"><label for="driver_available">Driver available</label><span class="unit">flag</span></div>
+            <select id="driver_available" name="driver_available">
+              <option value="1">Yes</option>
+              <option value="0">No</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <div class="label-row"><label for="driver_status">Driver status</label><span class="unit">state</span></div>
+            <select id="driver_status" name="driver_status">
+              <option>Available</option>
+              <option>Busy</option>
+              <option>Offline</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <div class="label-row"><label for="request_latitude">Request latitude</label><span class="unit">lat</span></div>
+            <input id="request_latitude" name="request_latitude" type="number" step="0.00001" value="40.76850">
+          </div>
+
+          <div class="field">
+            <div class="label-row"><label for="request_longitude">Request longitude</label><span class="unit">lng</span></div>
+            <input id="request_longitude" name="request_longitude" type="number" step="0.00001" value="-74.00629">
+          </div>
+
+          <div class="field">
+            <div class="label-row"><label for="pickup_wait_time">Pickup wait time</label><span class="unit">mins</span></div>
+            <input id="pickup_wait_time" name="pickup_wait_time" type="number" step="0.1" value="16.3">
+          </div>
+
+          <div class="field">
+            <div class="label-row"><label for="cancellation_flag">Cancellation flag</label><span class="unit">binary</span></div>
+            <select id="cancellation_flag" name="cancellation_flag">
+              <option value="0">No</option>
+              <option value="1">Yes</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <div class="label-row"><label for="available_driver_count">Available drivers nearby</label><span class="unit">drivers</span></div>
+            <input id="available_driver_count" name="available_driver_count" type="number" inputmode="numeric" step="1" min="0" value="18" required aria-describedby="drivers-hint">
+          </div>
         </div>
 
-        <div class="field">
-          <div class="label-row">
-            <label for="available_driver_count">Available drivers nearby</label>
-            <span class="unit">drivers</span>
-          </div>
-          <div class="input-wrap">
-            <input id="available_driver_count" name="available_driver_count" type="number" inputmode="numeric" step="1" min="0" value="35" required aria-describedby="drivers-hint">
-          </div>
-          <p id="drivers-hint" class="hint">Count of drivers currently available in the service area.</p>
-        </div>
+        <p id="surge-hint" class="hint">1.0 means standard pricing; higher values indicate stronger surge.</p>
+        <p id="drivers-hint" class="hint">Count of drivers currently available in the service area.</p>
 
         <div class="actions">
           <button type="submit" id="submit-btn" class="button button-primary">Generate demand outlook <span aria-hidden="true">→</span></button>
