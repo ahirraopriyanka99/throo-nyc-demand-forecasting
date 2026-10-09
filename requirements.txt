@@ -3,3 +3,18 @@ pandas
 numpy
 scikit-learn
 joblib
+
+
+        Here are the values in plain text:
+
+**Low**
+- Surge multiplier: 1.0
+- Available drivers: 26 to 59 (example: 40)
+
+**Medium**
+- Surge multiplier: 1.0 with 9 to 25 drivers, or 1.4, 1.6, or 1.7 with 9 to 24 drivers
+- Example: surge 1.4, drivers 20
+
+**High**
+- Surge multiplier: 1.9 to 2.5
+- Available drivers: 1 to 7 (example: surge 2.2, drivers 4)
